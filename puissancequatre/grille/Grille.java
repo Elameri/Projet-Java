@@ -1,52 +1,57 @@
-
 package puissancequatre.grille;
+
 public class Grille {
 	
-	private int longGrille = 6;
-	private int largGrille = 7;
-	char[][] laGrille = new char[longGrille][largGrille] ;;
+	private static int longGrille = 6;
+	private static int largGrille = 7;
+	private static char[][] laGrille = new char[longGrille][largGrille];
 	
 	// constructeur de la grille
-	Grille(){
+	public Grille(){
+		
 		for (int i=0; i<longGrille; i++){
 			for (int j=0; j<largGrille; j++) {
-				this.laGrille[i][j] = '.' ;
+				Grille.laGrille[i][j] = '.' ;
 			}
 		}
 	}
 	
-	// pour avoir la grille
-	public char[][] getGrille(){
+	// getter de la Grille
+	public static char[][] getGrille(){
 		return laGrille;
 	}
 	
-	
 	// Savoir si un coup est valable
-	public boolean coupValable(int[][] grille, int coup) {
+	public static boolean coupValable(char[][] grille, int coup) {
 		int longueur = grille.length;
-		for (int i=0; i<longueur; i++){
-			if (grille[i][coup-1] != '.') {
-				return true;
+		int largeur = grille[0].length;
+		
+		if( (coup >= 1) && (coup <= largeur) ) {
+			for (int i=0; i<longueur; i++){
+				if (grille[i][coup-1] == '.') {
+					return true;
+				}
 			}
 		}
 		return false;
 	}
 	
 	// Actualiser la grille apres un coup valide
-	public int[][] actualiserGrille(int[][] grille, char symboleJoueur, int coup) {
+	public static char[][] actualiserGrille(char[][] grille, char symboleJoueur, int coup) {
 		int longueur = grille.length;
+		int compt = 0;
 		for (int i=0; i<longueur; i++){
-			if (grille[i][coup-1] != '.') {
-				grille[i-1][coup-1] = symboleJoueur;
-				break;
+			if (grille[i][coup-1] == '.') {
+				compt++;
 			}
-
 		}
+		grille[compt-1][coup-1] = symboleJoueur;
+		//System.out.println("grille[compt-1][coup-1] = " + grille[compt-1][coup-1]);
 		return grille;
 	}
 	
 	// Afficher la grille
-	public void afficherGrille(int[][] grille) {
+	public static void afficherGrille(char[][] grille) {
 		int longueur = grille.length;
 		int largeur = grille[0].length;
 		
