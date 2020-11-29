@@ -4,11 +4,12 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Joueur {
+	
 	String nom;
 	String type;
 	//String symbole;
 	int coup;
-	Scanner scanner = new Scanner(System.in);
+	
 	
 	// Constructeur de joueur
 	public Joueur(String nom, String type){
@@ -53,8 +54,8 @@ public class Joueur {
 		}
 		else if ( (joueurX.type).equals("humain") ) {
 			
-			System.out.print("\nVous jouez : ");
-			coup = scanner.nextInt();
+			//System.out.print("\nVous jouez : ");
+			//coup = scanner.nextInt();
 			
 			/*
 			try {
@@ -65,9 +66,31 @@ public class Joueur {
 				System.out.println("Erreur saisie colonne xyz");
 			}
 			*/
+			int[] estCeInt = scannerInt();;
+			
+			while (estCeInt[0] == 0) {
+				estCeInt = scannerInt();
+		    }
+			
+			coup = estCeInt[1];
+			
 		}
-		
 		return coup;
 	}
 	
+	
+	private static int[] scannerInt() {
+		Scanner scanner = new Scanner(System.in);
+		int coup = -1;
+        try {
+        	System.out.print("\nVous jouez : "); 
+            coup = scanner.nextInt();
+        } catch (Exception e) {
+            System.out.println("Erreur saisie colonne xyz");
+            //scanner.close();
+            return new int[] {0, 0};
+        }
+        return new int[] {1, coup};
+    }
+
 }

@@ -2,23 +2,23 @@ package puissancequatre.grille;
 
 public class Grille {
 	
-	private static int longGrille = 6;
-	private static int largGrille = 7;
-	private static char[][] laGrille = new char[longGrille][largGrille];
+	private final int longGrille = 6;
+	private final int largGrille = 7;
+	private char[][] laGrille = new char[longGrille][largGrille];
 	
 	// constructeur de la grille
 	public Grille(){
 		
 		for (int i=0; i<longGrille; i++){
 			for (int j=0; j<largGrille; j++) {
-				Grille.laGrille[i][j] = '.' ;
+				this.laGrille[i][j] = '.' ;
 			}
 		}
 	}
 	
 	// getter de la Grille
-	public static char[][] getGrille(){
-		return laGrille;
+	public char[][] getGrille(){
+		return this.laGrille;
 	}
 	
 	// Savoir si un coup est valable
@@ -68,6 +68,104 @@ public class Grille {
 			}
 			System.out.println();
 		}
+	}
+	
+	public static boolean AGagne(char[][] grille, char symboleJoueur, int pionsPourVictoire) {
+		int longueur = grille.length;
+		int largeur = grille[0].length;
+		
+		int somme = 0;
+		int x = 0; 
+		int y = 0; 
+
+		for (int i=0; i<longueur; i++){
+			for (int j=0; j<largeur; j++) {
+				
+				// horizontale:
+				x = i; 
+				y = j; 
+				somme=0;
+				
+				while(y >= 0 && grille[x][y] == symboleJoueur){ 
+					y--; 
+					somme++;
+				}
+				y = j;
+				while(y < largeur && grille[x][y] == symboleJoueur){ 
+					y++; 
+					somme++;
+				}
+				
+				if(somme > pionsPourVictoire) {
+					return true;
+				}
+				
+				// veticale:
+				x = i;
+				y = j;
+				somme=0;
+				while(x >= 0 && grille[x][y] == symboleJoueur){ 
+					x--; 
+					somme++;
+				}
+				x = i;
+				while(x < longueur && grille[x][y] == symboleJoueur){ 
+					x++; 
+					somme++;
+				}
+				if(somme > pionsPourVictoire) {
+					return true;
+				}
+				
+				// diagonale
+				x = longueur-1; 
+				y = largeur-1; 
+				somme = 0;
+				
+				while(y >= 0 && x >= 0 && grille[x][y] == symboleJoueur){ 
+					y--;
+					x--;
+					somme++;
+				}
+				x = i; 
+				y = j;
+				
+				while(y < largeur && x < longueur && grille[x][y] == symboleJoueur){ 
+					y++; 
+					x++; 
+					somme++;
+				}
+				
+				if(somme > pionsPourVictoire) {
+					return true;
+				}
+				
+				// anti-diagonale
+				x = i; 
+				y = j; 
+				somme=0;
+				
+				while(y >= 0 && x < longueur && grille[x][y] == symboleJoueur){ 
+					y--;
+					x++;
+					somme++;
+				}
+				x = i;
+				y = j;
+				while(y < largeur && x >= 0 && grille[x][y] == symboleJoueur){
+					y++; 
+					x--; 
+					somme++;
+				}
+				
+				if(somme > pionsPourVictoire) {
+					return true;
+				}
+
+			}
+		}
+		return false;
+
 	}
 
 }
