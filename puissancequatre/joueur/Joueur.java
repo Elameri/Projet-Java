@@ -54,18 +54,6 @@ public class Joueur {
 		}
 		else if ( (joueurX.type).equals("humain") ) {
 			
-			//System.out.print("\nVous jouez : ");
-			//coup = scanner.nextInt();
-			
-			/*
-			try {
-				System.out.print("\nVous jouez : ");
-				coup = scanner.nextInt();
-			}
-			catch(Exception e) {
-				System.out.println("Erreur saisie colonne xyz");
-			}
-			*/
 			int[] estCeInt = scannerInt();;
 			
 			while (estCeInt[0] == 0) {

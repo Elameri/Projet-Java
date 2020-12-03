@@ -4,20 +4,31 @@ import java.util.Scanner;
 import puissancequatre.grille.Grille;
 import puissancequatre.joueur.Joueur;
 
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+
 public class Partie {
 
-	private static int nbrManchesPourGagner;
-	private static int pionsPourVictoire;
+	private int nbrManchesPourGagner;
+	private int pionsPourVictoire;
 	static Scanner scan = new Scanner(System.in);
+	private Grille maGrille;
+	private Joueur joueur1;
+	private Joueur joueur2;
 	
 	Partie(){
-		Partie.nbrManchesPourGagner = 3;
-		Partie.pionsPourVictoire = 4;
+		
+		this.nbrManchesPourGagner = 3;
+		this.pionsPourVictoire = 4;
+		this.maGrille = new Grille();
 		
 	}
 	
 	// methode principale pour jouer
-	public static void jouer() {
+	private void jouer() {
 		
 		//String joueurScan;
 		String[] infosJoueur1 = new String[] {};
@@ -29,12 +40,13 @@ public class Partie {
 
 		System.out.println("\nMatch de : " + infosJoueur1[1] + " vs " + infosJoueur2[1] + "\n");
 		
-		Joueur joueur1 = new Joueur(infosJoueur1[1], infosJoueur1[0]);
-		Joueur joueur2 = new Joueur(infosJoueur2[1], infosJoueur2[0]);
+		joueur1 = new Joueur(infosJoueur1[1], infosJoueur1[0]);
+		joueur2 = new Joueur(infosJoueur2[1], infosJoueur2[0]);
 		
-		//Grille grilleJeu = new Grille();
-		//char[][] grille_jeu = grilleJeu.getGrille();
-		//Grille.afficherGrille(grille_jeu);
+		ecrireDansFichier("Joueur 1 est " + infosJoueur1[0] + " " + infosJoueur1[1], false);
+		ecrireDansFichier("Joueur 2 est " + infosJoueur2[0] + " " + infosJoueur2[1], true);
+		
+		//maGrille.initialiserGrille();
 		
 		int mancheGagneJ1 = 0;
 		int mancheGagneJ2 = 0;
@@ -42,70 +54,121 @@ public class Partie {
 		
 		while (mancheGagneJ1 < nbrManchesPourGagner && mancheGagneJ2 < nbrManchesPourGagner) {
 			
-			Grille grilleJeu = new Grille();
-			char[][] grille_jeu = grilleJeu.getGrille();
-			Grille.afficherGrille(grille_jeu);
+			maGrille.initialiserGrille();
+			maGrille.afficherGrille();
 			quelquUnAGagneManche = 0;
+			
+			ecrireDansFichier("Manche commence", true);
 			
 			while (quelquUnAGagneManche != 1) {
 				
+				// verifier que la manche n'est pas finie avant de lire le coup du joueur 1
 				if (quelquUnAGagneManche != 1) {
-					grille_jeu = lireCoupValide(joueur1, grille_jeu, 1, 'X');
+					lireCoupValide(joueur1, 1, 'X');
 				}
-				
-				if(Grille.AGagne(grille_jeu, 'X', pionsPourVictoire)) {
-					System.out.println(infosJoueur1[1] + " a gagné la manche!\n");
+   
+				// verifier si le joueur 1 a gagne ou partie nulle 
+				if(maGrille.AGagne('X', pionsPourVictoire)) {
+					System.out.println(infosJoueur1[1] + " a gagne la manche!\n");
 					quelquUnAGagneManche = 1;
 					mancheGagneJ1++;
+					ecrireDansFichier("Joueur 1 gagne", true);
+				}
+				else if( maGrille.estCeQueGrillePleine() )	{
+					System.out.println(" Egalite !\n");
+					quelquUnAGagneManche = 1;
+					ecrireDansFichier("Egalite", true);
+					
 				}
 				
+				// verifier que la manche n'est pas finie avant de lire le coup du joueur 2
 				if (quelquUnAGagneManche != 1) {
-					grille_jeu = lireCoupValide(joueur2, grille_jeu, 2, 'O');
+					lireCoupValide(joueur2, 2, 'O');
 				}
 	
-				if(Grille.AGagne(grille_jeu, 'O', pionsPourVictoire)) {
-					System.out.println(infosJoueur2[1] + " a gagné la manche!\n");
+				// verifier si le joueur 2 a gagne ou partie nulle 
+				if(maGrille.AGagne('O', pionsPourVictoire)) {
+					System.out.println(infosJoueur2[1] + " a gagne la manche!\n");
 					quelquUnAGagneManche = 1;
 					mancheGagneJ2++;
+					ecrireDansFichier("Joueur 2 gagne", true);
+				}
+				else if( maGrille.estCeQueGrillePleine() ) {
+					System.out.println(" Egalite !\n");
+					quelquUnAGagneManche = 1;
+					ecrireDansFichier("Egalite", true);
 				}
 				
-				if (quelquUnAGagneManche != 1) {
-					Grille.afficherGrille(grille_jeu);
-				}
+
+				maGrille.afficherGrille();
+				System.out.println();
+
 			}
+			
+			ecrireDansFichier("Score " + mancheGagneJ1 + " - " + mancheGagneJ2, true);
 			
 		}
 		
 		if (mancheGagneJ1 > mancheGagneJ2) {
-			System.out.println(infosJoueur1[1] + " a gagné la partie!\n");
+			System.out.println(infosJoueur1[1] + " a gagne la partie!\n");
+			ecrireDansFichier("Partie finie", true);
+			ecrireDansFichier(infosJoueur1[1] + " a gagne la partie\n", true);
 		}
 		else {
-			System.out.println(infosJoueur2[1] + " a gagné la partie!\n");
+			System.out.println(infosJoueur2[1] + " a gagne la partie!\n");
+			ecrireDansFichier("Partie finie", true);
+			ecrireDansFichier(infosJoueur2[1] + " a gagne la partie\n", true);
+		}
+	}
+	
+	// Ecrire dans le fichier log.txt
+	private void ecrireDansFichier(String ligne, boolean add) {
+		try {
+
+			if(add) { // ajouter au fichier et ne pas ecraser
+				FileWriter myWriter = new FileWriter("src/puissancequatre/log.txt", true);
+				myWriter.write(ligne);
+				myWriter.write("\n");
+				myWriter.close();
+			}
+			else { // tt ecraser et ecrire
+				FileWriter myWriter = new FileWriter("src/puissancequatre/log.txt");
+				myWriter.write(ligne);
+				myWriter.write("\n");
+				myWriter.close();
+			}
+
+		}
+		catch (IOException e) {
+			System.out.println("Erreur pendant le lecture ou l'ecriture dans log.txt.");
+			e.printStackTrace();
 		}
 	}
 	
 
 	// Avoir un coup valable d'un joueur
-	public static char[][] lireCoupValide(Joueur joueur, char[][] grilleJeu, int numJoueur, char symboleJoueur) {
-		char[][] grilleJeuUtilisee = grilleJeu;
+	private void lireCoupValide(Joueur joueur, int numJoueur, char symboleJoueur) {
 		int coupJ = 0;
 		int coupValableJ = 0;
 
 		while (coupValableJ != 1) { // tant qu'on a pas un coup valable du joueur
 			coupJ = joueur.coupJoueur(joueur, 7);
-			if(Grille.coupValable(grilleJeuUtilisee, coupJ)) {
-				grilleJeuUtilisee = Grille.actualiserGrille(grilleJeuUtilisee, symboleJoueur, coupJ);
+			if( maGrille.coupValable(coupJ) == 1 ) {
+				maGrille.actualiserGrille(symboleJoueur, coupJ);
 				coupValableJ = 1;
+				ecrireDansFichier("Joueur " + numJoueur + " joue " + coupJ, true);
+			}
+			else if( maGrille.coupValable(coupJ) == 0 ) {
+				System.out.println("Erreur colonne pleine " + coupJ);
 			}
 			else {
-				System.out.println("coup non valable, veuillez rejouer ");
+				System.out.println("Erreur colonne non valide " + coupJ);
 			}
 		}
-		return grilleJeuUtilisee;
 	}
 	
 	// Avoir le nom et le type d'un joueur en lisant l'entrée standard
-	public static String[] lireNomTypeJoueur(int numJoueur) {
+	private String[] lireNomTypeJoueur(int numJoueur) {
 		String joueurScan;
 		String[] infosJoueur = new String[] {};
 
@@ -120,7 +183,7 @@ public class Partie {
 				}
 			}
 			else {
-				System.out.println("Erreur saisie Joueur 1");
+				System.out.println("Erreur saisie Joueur " + numJoueur);
 			}
 		}
 		return infosJoueur;
@@ -129,13 +192,13 @@ public class Partie {
 	
 	
 	public static void main(String[] args) {
-		new Partie();
+		Partie partie = new Partie();
 		
 		System.out.println("+--------------------------------+");
 		System.out.println("| Bienvenue sur Puissance Quatre |");
 		System.out.println("+--------------------------------+\n");
 		
-		jouer();
+		partie.jouer();
 		//System.exit(0);
 		
 	}
