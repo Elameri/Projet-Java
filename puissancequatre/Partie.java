@@ -126,13 +126,15 @@ public class Partie {
 		try {
 
 			if(add) { // ajouter au fichier et ne pas ecraser
-				FileWriter myWriter = new FileWriter("src/puissancequatre/log.txt", true);
+				//FileWriter myWriter = new FileWriter("src/puissancequatre/log.txt", true);
+				FileWriter myWriter = new FileWriter("puissancequatre/log.txt", true);
 				myWriter.write(ligne);
 				myWriter.write("\n");
 				myWriter.close();
 			}
 			else { // tt ecraser et ecrire
-				FileWriter myWriter = new FileWriter("src/puissancequatre/log.txt");
+				//FileWriter myWriter = new FileWriter("src/puissancequatre/log.txt");
+				FileWriter myWriter = new FileWriter("puissancequatre/log.txt");
 				myWriter.write(ligne);
 				myWriter.write("\n");
 				myWriter.close();
