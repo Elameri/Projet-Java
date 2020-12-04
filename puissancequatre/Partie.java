@@ -29,8 +29,6 @@ public class Partie {
 	// methode principale pour jouer
 	private void jouer() {
 		
-		creerFichierLog();
-		
 		//String joueurScan;
 		String[] infosJoueur1 = new String[] {};
 		String[] infosJoueur2 = new String[] {};
@@ -123,35 +121,20 @@ public class Partie {
 	}
 	
 	
-	// Tester l'existence ou creer le fichier log.txt
-	private void creerFichierLog() {
-		try { 
-            //File fileName = new File("src" + File.separator + "puissancequatre" + File.separator + "log.txt"); 
-            File fileName = new File("puissancequatre" + File.separator + "log.txt"); 
-
-            if (fileName.createNewFile()) 
-                System.out.println("le fichier log.txt est creee\n"); 
-            else
-                System.out.println("le fichier log.txt existe deja\n"); 
-        } 
-        catch (Exception e) { 
-            System.err.println(e); 
-        } 
-	}
 	// Ecrire dans le fichier log.txt
 	private void ecrireDansFichier(String ligne, boolean add) {
 		try {
 
 			if(add) { // ajouter au fichier et ne pas ecraser
 				//FileWriter myWriter = new FileWriter("src" + File.separator + "puissancequatre" + File.separator + "log.txt", true);
-				FileWriter myWriter = new FileWriter("puissancequatre" + File.separator + "log.txt", true);
+				FileWriter myWriter = new FileWriter("log.txt", true);
 				myWriter.write(ligne);
 				myWriter.write("\n");
 				myWriter.close();
 			}
 			else { // tt ecraser et ecrire
 				//FileWriter myWriter = new FileWriter("src" + File.separator + "puissancequatre" + File.separator + "log.txt");
-				FileWriter myWriter = new FileWriter("puissancequatre" + File.separator + "log.txt");
+				FileWriter myWriter = new FileWriter("log.txt");
 				myWriter.write(ligne);
 				myWriter.write("\n");
 				myWriter.close();
