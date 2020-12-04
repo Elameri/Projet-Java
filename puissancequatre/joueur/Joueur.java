@@ -3,6 +3,8 @@ package puissancequatre.joueur;
 import java.util.Random;
 import java.util.Scanner;
 
+import puissancequatre.grille.Grille;
+
 public class Joueur {
 	
 	String nom;
@@ -44,15 +46,18 @@ public class Joueur {
 	}
 	
 	// avoir le coup du joueur
-	public int coupJoueur(Joueur joueurX, int largeur) {
+	public int coupJoueur(Grille grille, int largeur) {
 		int coup = 0;
 		Random rand = new Random();
 		
-		if ( (joueurX.type).equals("ia") ) {
-			coup = rand.nextInt(largeur - 1) + 1;
-			System.out.println("\n" + joueurX.nom + " joue : " + coup + "\n");
+		if ( (type).equals("ia") ) {
+			//coup = rand.nextInt(largeur - 1) + 1;
+			while(grille.coupValable(coup) != 1) {
+				coup = rand.nextInt(largeur - 1) + 1;
+			}
+			System.out.println("\n" + nom + " joue : " + coup + "\n");
 		}
-		else if ( (joueurX.type).equals("humain") ) {
+		else if ( (type).equals("humain") ) {
 			
 			int[] estCeInt = scannerInt();;
 			
